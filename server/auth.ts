@@ -20,7 +20,19 @@ export async function login(username: string, password: string) {
     throw new Error("Invalid username or password");
   }
 
+  console.log('Debug - Login attempt:', {
+    username,
+    providedPassword: password,
+    storedPassword: user.password,
+    passwordLength: user.password.length
+  });
+
   const isValidPassword = await compare(password, user.password);
+  
+  console.log('Debug - Password comparison result:', {
+    isValidPassword,
+    passwordMatch: password === user.password // Direct comparison for debugging
+  });
   
   if (!isValidPassword) {
     throw new Error("Invalid username or password");

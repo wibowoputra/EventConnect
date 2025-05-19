@@ -7,6 +7,7 @@ import {
   racePacks, type RacePack, type InsertRacePack,
   participantCheckpoints, type ParticipantCheckpoint, type InsertParticipantCheckpoint
 } from "@shared/schema";
+import { hash } from "bcrypt";
 
 export interface IStorage {
   // User methods
@@ -333,7 +334,9 @@ export class MemStorage implements IStorage {
   async createUser(userData: InsertUser): Promise<User> {
     const id = this.userCurrentId++;
     const now = new Date();
-    const user: User = { ...userData, id, createdAt: now };
+    // Hash the password before storing
+    const hashedPassword = await hash(userData.password, 10);
+    const user: User = { ...userData, password: hashedPassword, id, createdAt: now };
     this.users.set(id, user);
     return user;
   }

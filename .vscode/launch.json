@@ -8,7 +8,7 @@
             "name": "Launch Chrome",
             "request": "launch",
             "type": "chrome",
-            "url": "http://localhost:8080",
+            "url": "http://localhost:5000",
             "webRoot": "${workspaceFolder}"
         },
         {
@@ -26,16 +26,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug TSX Server",
-            "runtimeExecutable": "npx",
-            "runtimeArgs": [
-                "tsx",
-                "server/index.ts"
-            ],
+            "name": "Debug Server",
+            "skipFiles": ["<node_internals>/**"],
+            "program": "${workspaceFolder}/server/index.ts",
+            "runtimeExecutable": "tsx",
+            "runtimeArgs": ["--inspect"],
             "env": {
                 "NODE_ENV": "development"
             },
-            "skipFiles": ["<node_internals>/**"],
             "console": "integratedTerminal"
         }
     ]
