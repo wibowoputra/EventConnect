@@ -196,7 +196,7 @@ const EventDetails = () => {
                 <div>
                   <p className="text-sm font-medium text-gray-500">Registration</p>
                   <p className="mt-1">
-                    <Badge variant={registrationOpen ? "success" : "destructive"}>
+                    <Badge variant={registrationOpen ? "default" : "destructive"}>
                       {registrationOpen ? "Open" : "Closed"}
                     </Badge>
                   </p>

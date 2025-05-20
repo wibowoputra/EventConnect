@@ -82,10 +82,17 @@ const EventCreate = () => {
   
   const onSubmit = async (data: FormValues) => {
     try {
-      await dispatch(createEvent({
+      const eventData = {
         ...data,
-        date: data.date.toISOString(),
-      })).unwrap();
+        date: data.date,
+        capacity: data.capacity || null,
+        price: data.price || null,
+        image: data.image || null,
+        registrationOpen: data.registrationOpen || null,
+        status: data.status || "draft",
+      };
+      
+      await dispatch(createEvent(eventData)).unwrap();
       
       toast({
         title: "Event created successfully",
@@ -320,7 +327,7 @@ const EventCreate = () => {
                   <FormItem>
                     <FormLabel>Event Image URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://example.com/image.jpg" {...field} />
+                      <Input placeholder="https://example.com/image.jpg" {...field} value={field.value || ''} />
                     </FormControl>
                     <FormDescription>Provide a URL for your event's cover image</FormDescription>
                     <FormMessage />
@@ -336,7 +343,7 @@ const EventCreate = () => {
                     <FormControl>
                       <input
                         type="checkbox"
-                        checked={field.value}
+                        checked={field.value ?? false}
                         onChange={(e) => field.onChange(e.target.checked)}
                         className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                       />

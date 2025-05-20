@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Box, Download, Plus, AlertTriangle } from "lucide-react";
+import { Box, Download, Plus, AlertTriangle, Link } from "lucide-react";
 import RacePackTable from "@/components/racepack/RacePackTable";
 import { fetchEvents } from "@/store/eventsSlice";
 import { fetchRacePacksByEvent } from "@/store/racepacksSlice";
@@ -23,7 +23,7 @@ const RacePacks = () => {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   
   // Fetch events
-  const { data: events, isLoading: eventsLoading } = useQuery({
+  const { data: events, isLoading: eventsLoading } = useQuery<Event[]>({
     queryKey: ['/api/events'],
   });
   
@@ -59,7 +59,7 @@ const RacePacks = () => {
 
   // Find low stock items
   const lowStockItems = racePacks.filter((item: RacePack) => {
-    return item.stockQuantity - item.distributedQuantity <= 0.1 * item.stockQuantity;
+    return item.stockQuantity - (item.distributedQuantity || 0) <= 0.1 * item.stockQuantity;
   });
 
   if (eventsLoading || eventsStatus === "loading") {
@@ -88,8 +88,8 @@ const RacePacks = () => {
           <CardContent className="pt-6 text-center">
             <h3 className="text-lg font-medium text-gray-900 mb-2">No Events Found</h3>
             <p className="text-gray-500 mb-4">Please create an event first to manage race packs.</p>
-            <Button href="/events/create" asChild>
-              <a>Create Event</a>
+            <Button asChild>
+              <Link href="/events/create">Create Event</Link>
             </Button>
           </CardContent>
         </Card>
@@ -171,7 +171,7 @@ const RacePacks = () => {
                     <div className="ml-3">
                       <div className="text-sm font-medium text-gray-500">Distributed</div>
                       <div className="text-2xl font-semibold">
-                        {racePacks.reduce((sum, item) => sum + item.distributedQuantity, 0)}
+                        {racePacks.reduce((sum, item) => sum + (item.distributedQuantity || 0), 0)}
                       </div>
                     </div>
                   </div>
