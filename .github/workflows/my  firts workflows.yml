@@ -1,0 +1,22 @@
+name: My First Workflow
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Welcome message
+        run: echo "Hello, world!"
+
+      - name: list file
+        run: ls -la
+
+      - name: read file
+        run: cat package.json
+
+      

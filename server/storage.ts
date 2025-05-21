@@ -103,7 +103,7 @@ export class MemStorage implements IStorage {
     this.initializeData();
   }
 
-  private initializeData() {
+  private async initializeData() {
     // Create sample admin user
     this.createUser({
       username: "admin",
@@ -132,7 +132,7 @@ export class MemStorage implements IStorage {
     });
 
     // Create sample events
-    const jakartaMarathon = this.createEvent({
+    const jakartaMarathon = await this.createEvent({
       title: "Jakarta Marathon 2023",
       description: "Join the biggest marathon event in Jakarta",
       date: new Date("2023-10-15T07:00:00"),
@@ -146,7 +146,7 @@ export class MemStorage implements IStorage {
       registrationOpen: true,
     });
 
-    const baliCycling = this.createEvent({
+    const baliCycling = await this.createEvent({
       title: "Bali Cycling Tour",
       description: "Experience the beauty of Bali while cycling",
       date: new Date("2023-11-05T06:30:00"),
@@ -160,7 +160,7 @@ export class MemStorage implements IStorage {
       registrationOpen: true,
     });
 
-    const lombokSwim = this.createEvent({
+    const lombokSwim = await this.createEvent({
       title: "Lombok Open Water Swim",
       description: "Swim in the crystal clear waters of Lombok",
       date: new Date("2023-12-03T08:00:00"),
@@ -336,7 +336,14 @@ export class MemStorage implements IStorage {
     const now = new Date();
     // Hash the password before storing
     const hashedPassword = await hash(userData.password, 10);
-    const user: User = { ...userData, password: hashedPassword, id, createdAt: now };
+    const user: User = { 
+      ...userData, 
+      password: hashedPassword, 
+      id, 
+      createdAt: now,
+      role: userData.role ?? "participant",
+      avatar: userData.avatar ?? null
+    };
     this.users.set(id, user);
     return user;
   }
@@ -378,7 +385,16 @@ export class MemStorage implements IStorage {
   async createEvent(eventData: InsertEvent): Promise<Event> {
     const id = this.eventCurrentId++;
     const now = new Date();
-    const event: Event = { ...eventData, id, createdAt: now };
+    const event: Event = { 
+      ...eventData, 
+      id, 
+      createdAt: now,
+      status: eventData.status ?? "draft",
+      capacity: eventData.capacity ?? null,
+      price: eventData.price ?? null,
+      image: eventData.image ?? null,
+      registrationOpen: eventData.registrationOpen ?? null
+    };
     this.events.set(id, event);
     return event;
   }
@@ -422,7 +438,15 @@ export class MemStorage implements IStorage {
   async createRegistration(registrationData: InsertRegistration): Promise<Registration> {
     const id = this.registrationCurrentId++;
     const now = new Date();
-    const registration: Registration = { ...registrationData, id, registrationDate: now };
+    const registration: Registration = { 
+      ...registrationData, 
+      id, 
+      registrationDate: now,
+      status: registrationData.status ?? "registered",
+      category: registrationData.category ?? null,
+      bibNumber: registrationData.bibNumber ?? null,
+      additionalInfo: registrationData.additionalInfo ?? null
+    };
     this.registrations.set(id, registration);
     return registration;
   }
@@ -458,7 +482,12 @@ export class MemStorage implements IStorage {
   async createCommunity(communityData: InsertCommunity): Promise<Community> {
     const id = this.communityCurrentId++;
     const now = new Date();
-    const community: Community = { ...communityData, id, createdAt: now };
+    const community: Community = { 
+      ...communityData, 
+      id, 
+      createdAt: now,
+      image: communityData.image ?? null 
+    };
     this.communities.set(id, community);
     return community;
   }
@@ -518,7 +547,11 @@ export class MemStorage implements IStorage {
 
   async createRacePack(racePackData: InsertRacePack): Promise<RacePack> {
     const id = this.racePackCurrentId++;
-    const racePack: RacePack = { ...racePackData, id };
+    const racePack: RacePack = { 
+      ...racePackData, 
+      id,
+      distributedQuantity: racePackData.distributedQuantity ?? null 
+    };
     this.racePacks.set(id, racePack);
     return racePack;
   }
@@ -550,7 +583,12 @@ export class MemStorage implements IStorage {
   async createParticipantCheckpoint(checkpointData: InsertParticipantCheckpoint): Promise<ParticipantCheckpoint> {
     const id = this.participantCheckpointCurrentId++;
     const now = new Date();
-    const checkpoint: ParticipantCheckpoint = { ...checkpointData, id, timestamp: now };
+    const checkpoint: ParticipantCheckpoint = { 
+      ...checkpointData, 
+      id, 
+      timestamp: now,
+      checkpointDistance: checkpointData.checkpointDistance ?? null 
+    };
     this.participantCheckpoints.set(id, checkpoint);
     return checkpoint;
   }

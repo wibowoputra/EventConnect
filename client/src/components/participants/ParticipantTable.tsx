@@ -33,17 +33,17 @@ const ParticipantTable = ({ eventId }: ParticipantTableProps) => {
   const itemsPerPage = 10;
 
   // Fetch events for dropdown
-  const { data: events, isLoading: eventsLoading } = useQuery({
+  const { data: events, isLoading: eventsLoading } = useQuery<Event[]>({
     queryKey: ['/api/events'],
   });
 
   // Fetch registrations for the selected event
-  const { data: registrations, isLoading: registrationsLoading } = useQuery({
+  const { data: registrations, isLoading: registrationsLoading } = useQuery<Registration[]>({
     queryKey: [`/api/registrations?eventId=${selectedEvent}`],
   });
 
   // Fetch all users
-  const { data: users, isLoading: usersLoading } = useQuery({
+  const { data: users, isLoading: usersLoading } = useQuery<User[]>({
     queryKey: ['/api/users'],
   });
 

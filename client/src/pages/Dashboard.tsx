@@ -19,13 +19,20 @@ import { fetchEvents } from "@/store/eventsSlice";
 import type { AppDispatch, RootState } from "@/store/store";
 import type { Event } from "@shared/schema";
 
+interface DashboardStats {
+  activeEvents: number;
+  totalRegistrations: number;
+  communities: number;
+  revenue: number;
+}
+
 const Dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("newest");
   
   // Fetch statistics data
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
     queryKey: ['/api/stats'],
   });
 

@@ -23,12 +23,11 @@ const RacePackTable = ({ eventId }: RacePackTableProps) => {
   const [selectedEvent, setSelectedEvent] = useState<number>(eventId);
 
   // Fetch events for dropdown
-  const { data: events, isLoading: eventsLoading } = useQuery({
+  const { data: events, isLoading: eventsLoading } = useQuery<Event[]>({
     queryKey: ['/api/events'],
   });
-
   // Fetch race packs for the selected event
-  const { data: racePacks, isLoading: racePacksLoading } = useQuery({
+  const { data: racePacks, isLoading: racePacksLoading } = useQuery<RacePack[]>({
     queryKey: [`/api/race-packs?eventId=${selectedEvent}`],
   });
 
@@ -80,7 +79,7 @@ const RacePackTable = ({ eventId }: RacePackTableProps) => {
   };
 
   const getStatusBadge = (item: RacePack) => {
-    const status = item.stockQuantity - item.distributedQuantity <= 0.1 * item.stockQuantity 
+    const status = item.stockQuantity - (item?.distributedQuantity || 0) <= 0.1 * item.stockQuantity 
       ? "Low Stock" 
       : "In Stock";
     const colorClass = status === "Low Stock" 
