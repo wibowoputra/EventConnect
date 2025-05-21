@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readdir, stat } from 'fs/promises';
+import { copyFile, mkdir, readdir, stat, rm } from 'fs/promises';
 import { dirname, resolve, join } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -26,23 +26,53 @@ async function copyDir(src, dest) {
   }
 }
 
+async function removeDirIfExists(dirPath) {
+  try {
+    await stat(dirPath);
+    console.log(`Removing directory: ${dirPath}`);
+    await rm(dirPath, { recursive: true, force: true });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.log(`Directory does not exist: ${dirPath}`);
+    } else {
+      throw err;
+    }
+  }
+}
+
 async function build() {
   try {
-    // First compile TypeScript files
+    // Clean the dist directory
+    console.log('Cleaning dist directory...');
+    const serverDir = resolve(__dirname, 'dist/server');
+    const sharedDir = resolve(__dirname, 'dist/shared');
+    
+    await removeDirIfExists(serverDir);
+    await removeDirIfExists(sharedDir);
+
+    // Create necessary directories
+    console.log('Creating directories...');
+    await mkdir(serverDir, { recursive: true });
+    await mkdir(sharedDir, { recursive: true });
+
+    // Compile TypeScript files
     console.log('Compiling TypeScript files...');
     execSync('tsc -p tsconfig.server.json', { stdio: 'inherit' });
 
-    // Copy shared directory if it exists
+    // Copy shared directory
     const sharedPath = resolve(__dirname, 'shared');
     try {
       await stat(sharedPath);
-      await copyDir(
-        sharedPath,
-        resolve(__dirname, 'dist/shared')
-      );
+      console.log('Copying shared directory...');
+      await copyDir(sharedPath, sharedDir);
     } catch (err) {
       console.log('Shared directory not found, skipping...');
     }
+
+    // Verify the build
+    console.log('Verifying build...');
+    const serverFiles = await readdir(serverDir);
+    console.log('Server files compiled:', serverFiles);
 
     console.log('Server build completed successfully!');
   } catch (err) {

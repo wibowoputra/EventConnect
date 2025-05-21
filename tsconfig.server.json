@@ -1,14 +1,19 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "CommonJS",
     "outDir": "dist/server",
-    "noEmit": true,
+    "noEmit": false,
     "jsx": "react",
     "moduleResolution": "node",
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "target": "ES2020",
+    "sourceMap": true,
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
-  "include": ["server/**/*"],
+  "include": ["server/**/*", "shared/**/*"],
   "exclude": ["node_modules", "client"]
 } 
