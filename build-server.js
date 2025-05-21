@@ -1,6 +1,7 @@
 import { copyFile, mkdir, readdir, stat } from 'fs/promises';
 import { dirname, resolve, join } from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -27,11 +28,9 @@ async function copyDir(src, dest) {
 
 async function build() {
   try {
-    // Copy server files
-    await copyDir(
-      resolve(__dirname, 'server'),
-      resolve(__dirname, 'dist/server')
-    );
+    // First compile TypeScript files
+    console.log('Compiling TypeScript files...');
+    execSync('tsc -p tsconfig.server.json', { stdio: 'inherit' });
 
     // Copy shared directory if it exists
     const sharedPath = resolve(__dirname, 'shared');
@@ -42,7 +41,6 @@ async function build() {
         resolve(__dirname, 'dist/shared')
       );
     } catch (err) {
-      // Shared directory doesn't exist, skip it
       console.log('Shared directory not found, skipping...');
     }
 
