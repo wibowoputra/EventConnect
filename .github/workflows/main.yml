@@ -52,7 +52,7 @@ jobs:
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_SLUG }}
+       # env:
+       #   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+       #   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
