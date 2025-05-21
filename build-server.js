@@ -69,6 +69,13 @@ async function build() {
       console.log('Shared directory not found, skipping...');
     }
 
+    // Copy package.json to dist/server for Vercel
+    console.log('Copying package.json to dist/server...');
+    await copyFile(
+      resolve(__dirname, 'package.json'),
+      resolve(serverDir, 'package.json')
+    );
+
     // Verify the build
     console.log('Verifying build...');
     const serverFiles = await readdir(serverDir);
