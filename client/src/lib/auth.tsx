@@ -18,6 +18,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Get the base URL for API calls
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    // Browser should use relative path
+    return '';
+  }
+  // Server should use absolute path
+  return process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:5000';
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
@@ -32,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const response = await fetch("/api/auth/me", {
+        const response = await fetch(`${getBaseUrl()}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -59,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`${getBaseUrl()}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
