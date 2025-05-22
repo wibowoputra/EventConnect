@@ -1,20 +1,12 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "dist/server/index.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["dist/server/index.js", "dist/shared/utils.js"],
-        "maxLambdaSize": "15mb"
-      }
+      "use": "@vercel/node"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "src": "dist/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -34,7 +26,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/index.html"
+      "dest": "/dist/$1"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 } 
