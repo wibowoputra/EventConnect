@@ -5,7 +5,7 @@
       "src": "dist/server/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/server/**/*", "dist/shared/**/*"],
+        "includeFiles": ["dist/server/index.js", "dist/shared/utils.js"],
         "maxLambdaSize": "15mb"
       }
     },
