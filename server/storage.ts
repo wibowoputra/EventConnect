@@ -6,7 +6,7 @@ import {
   communityMembers, type CommunityMember, type InsertCommunityMember,
   racePacks, type RacePack, type InsertRacePack,
   participantCheckpoints, type ParticipantCheckpoint, type InsertParticipantCheckpoint
-} from "@shared/schema";
+} from "../shared/schema.js";
 import { hash } from "bcrypt";
 
 export interface IStorage {

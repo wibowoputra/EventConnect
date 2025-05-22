@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { storage } from "./storage";
+import { storage } from "./storage.js";
 import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 

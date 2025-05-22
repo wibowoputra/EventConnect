@@ -1,10 +1,10 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { insertUserSchema, insertEventSchema, insertRegistrationSchema, insertCommunitySchema, insertCommunityMemberSchema, insertRacePackSchema, insertParticipantCheckpointSchema } from "@shared/schema";
+import { storage } from "./storage.js";
+import { insertUserSchema, insertEventSchema, insertRegistrationSchema, insertCommunitySchema, insertCommunityMemberSchema, insertRacePackSchema, insertParticipantCheckpointSchema } from "../shared/schema.js";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-import { login, authenticateToken, requireRole, AuthRequest } from "./auth";
+import { login, authenticateToken, requireRole, AuthRequest } from "./auth.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Error handler for Zod validation
