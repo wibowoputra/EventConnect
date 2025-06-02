@@ -14,25 +14,27 @@ export interface AuthRequest extends Request {
 }
 
 export async function login(username: string, password: string) {
+  console.log('Debug - Attempting to find user:', username);
   const user = await storage.getUserByUsername(username);
+  
+  console.log('Debug - User lookup result:', {
+    found: !!user,
+    user: user ? {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      email: user.email,
+      passwordLength: user.password.length
+    } : null
+  });
   
   if (!user) {
     throw new Error("Invalid username or password");
   }
 
-  console.log('Debug - Login attempt:', {
-    username,
-    providedPassword: password,
-    storedPassword: user.password,
-    passwordLength: user.password.length
-  });
-
+  console.log('Debug - Starting password comparison');
   const isValidPassword = await compare(password, user.password);
-  
-  console.log('Debug - Password comparison result:', {
-    isValidPassword,
-    passwordMatch: password === user.password // Direct comparison for debugging
-  });
+  console.log('Debug - Password comparison completed:', { isValidPassword });
   
   if (!isValidPassword) {
     throw new Error("Invalid username or password");

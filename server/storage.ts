@@ -81,6 +81,8 @@ export class MemStorage implements IStorage {
   private communityMemberCurrentId: number;
   private racePackCurrentId: number;
   private participantCheckpointCurrentId: number;
+  private initializationComplete: boolean = false;
+  private initializationCallbacks: (() => void)[] = [];
 
   constructor() {
     this.users = new Map();
@@ -100,17 +102,37 @@ export class MemStorage implements IStorage {
     this.participantCheckpointCurrentId = 1;
 
     // Initialize with sample data
-    this.initializeData();
+    this.initializeData().then(() => {
+      this.initializationComplete = true;
+      this.initializationCallbacks.forEach(callback => callback());
+    });
+  }
+
+  onInitializationComplete(callback: () => void) {
+    if (this.initializationComplete) {
+      callback();
+    } else {
+      this.initializationCallbacks.push(callback);
+    }
   }
 
   private async initializeData() {
+    console.log('Debug - Initializing storage with sample data');
+    
     // Create sample admin user
-    this.createUser({
+    const adminUser = await this.createUser({
       username: "admin",
       password: "admin123",
       email: "admin@eventhub.com",
       fullName: "Admin User",
       role: "admin",
+    });
+    
+    console.log('Debug - Admin user created:', {
+      id: adminUser.id,
+      username: adminUser.username,
+      role: adminUser.role,
+      passwordLength: adminUser.password.length
     });
 
     // Create sample organizer
@@ -334,8 +356,14 @@ export class MemStorage implements IStorage {
   async createUser(userData: InsertUser): Promise<User> {
     const id = this.userCurrentId++;
     const now = new Date();
-    // Hash the password before storing
-    const hashedPassword = await hash(userData.password, 10);
+    // Hash the password before storing - use lower salt rounds for testing
+    const hashedPassword = await hash(userData.password, 4);
+    console.log('Debug - Password hashing:', {
+      originalPassword: userData.password,
+      hashedPassword,
+      hashLength: hashedPassword.length
+    });
+    
     const user: User = { 
       ...userData, 
       password: hashedPassword, 
