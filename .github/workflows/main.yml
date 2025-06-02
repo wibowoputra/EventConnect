@@ -20,9 +20,8 @@ jobs:
         run: npm install
       - name: Build Server
         run: npm run build
-        
-      #- name: Run Tests
-      #  run: npm test
+      - name: Run Tests
+        run: npm run test:unit
 
   deploy:
     needs: test
@@ -34,9 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
-
+          node-version: '18.x'
       - name: Install Dependencies
         run: |
           npm install
