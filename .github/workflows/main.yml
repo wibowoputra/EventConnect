@@ -18,10 +18,12 @@ jobs:
           cache: 'npm'
       - name: Install Dependencies
         run: npm install
-      - name: Build Server
-        run: npm run build
       - name: Run Tests
         run: npm run test:unit
+      - name: Build Server
+        run: npm run build
+
+   
 
   deploy:
     needs: test
